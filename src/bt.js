@@ -124,7 +124,7 @@ function runRegister() {
       alert(error);
    else {
       updateUsers();
-      window.location = "./bt.html"
+      window.location = "./index.html"
    }
 }
 
@@ -194,11 +194,12 @@ if (loginSubmit)
 
 
 $("body").addEventListener('keydown', (e) => {
-   if (e.keyCode === 13)
-      if (window.location.pathname === '/public/bt3.html')
-         runRegister();
-      else if (window.localStorage.pathname === '/public/dangnhap.html')
+   if (e.keyCode === 13) {
+      if(window.location.pathname === '/public/dangnhap.html')
          runLogin();
+      else if(window.location.pathname === '/public/bt3.html')
+         runRegister();
+   }
 })
 
 //=================================================
