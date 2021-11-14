@@ -89,12 +89,12 @@ function checkRegisterForm() {
 
    if (password[0].value.length < 6) {
       error += 'Nhập lại mật khẩu\n'
-      for(let pass of password)
+      for (let pass of password)
          pass.value = ''
    }
    else if (password[0].value !== password[1].value) {
       error += 'Xác nhận mật khẩu trùng khớp\n'
-      for(let pass of password)
+      for (let pass of password)
          pass.value = ''
    }
 
@@ -174,8 +174,10 @@ function checkLoginForm() {
 function checkUserType(user) {
    if (user.typeUser === 'admin')
       window.location = "./admin.html"
-   else
-      window.location = "./bt.html"
+   else {
+      window.location = "./index.html"
+      $(".logo .nav-login").innerHTML = `<p>Xin chào ${user.email}</p>`
+   }
 }
 
 function runLogin() {
@@ -191,11 +193,11 @@ if (loginSubmit)
    loginSubmit.addEventListener('click', runLogin)
 
 
-$("body").addEventListener('keydown',(e) => {
+$("body").addEventListener('keydown', (e) => {
    if (e.keyCode === 13)
-      if(window.location.pathname === '/public/bt3.html')
+      if (window.location.pathname === '/public/bt3.html')
          runRegister();
-      else if(window.localStorage.pathname === '/public/dangnhap.html')
+      else if (window.localStorage.pathname === '/public/dangnhap.html')
          runLogin();
 })
 
