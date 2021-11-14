@@ -1,0 +1,100 @@
+* {
+   box-sizing: border-box;
+   margin: 0;
+   font-family: Lato, sans-serif;
+}
+
+.btn-open, .btn {
+   width: max-content;
+   background-color: #000;
+   color: #ffffff;
+}
+
+.btn a {
+   color: #fff;
+   text-decoration: none;
+}
+
+.modal {
+   display: none;
+   background: rgba(0, 0, 0, 0.7);
+}
+
+.open {
+   display: block;
+}
+
+.modal-content {
+   width: 600px;
+   margin: 0 auto;
+   background: #fff;
+}
+
+.modal-content .header {
+   height: 50px;
+   padding: 16px;
+   position: relative;
+   text-align: center;
+   background: #009688;
+   color: #fff;
+}
+
+.modal-content .header h3 {
+  position: absolute;
+  animation: animate 5s infinite;
+}
+
+@keyframes animate {
+  0% {
+    left: 20px;    
+  }
+  50% {
+    left: 480px;
+    color: #ccc;
+  }
+  100% {
+    left: 20px;
+    color:#fff;
+  }
+}
+
+.modal-content .header i {
+   position: absolute;
+   top: 0;
+   right: 0;
+   padding: 17px;
+}
+
+.modal-content .header i:hover {
+   background: red;
+}
+
+.modal-content .form-content,
+.modal-content .form-content .form-input,
+.modal-content .form-content .form-label,
+.modal-content .form-content .btn-submit {
+   margin-top: 4px;
+   padding: 8px;
+}
+
+.modal-content .form-content {
+   display: flex;
+   flex-direction: column;
+   padding: 8px;
+}
+
+.modal-content .form-content .btn-submit {
+   margin: 8px 0;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

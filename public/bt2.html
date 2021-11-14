@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=fo, initial-scale=1.0" />
+      <title>Document</title>
+      <link rel="stylesheet" href="../css/bt.css" />
+   </head>
+   <body>
+      <div id="box">
+         <div class="item item1">
+            <label for=""> Số A </label>
+            <input type="number" name="" id="" value="" class="numinput" />
+            <label for=""> Số B </label>
+            <input type="number" name="" id="" value="" class="numinput" />
+            <label for=""> Ket qua </label>
+            <input type="text" id="output" />
+         </div>
+         <div class="item item2">
+            <!-- <label for=""> Phép tính </label>
+            <button class="btn" value="+">+</button>
+            <button class="btn" value="-">-</button>
+            <button class="btn" value="x">x</button>
+            <button class="btn" value="/">/</button> -->
+            <select name="" id="">
+               <option value="+">+</option>
+               <option value="-">-</option>
+               <option value="x">x</option>
+               <option value="/">/</option>
+            </select>
+
+            <button>Tính</button>
+         </div>
+      </div>
+
+      <script>
+         let input = document.querySelectorAll(".numinput");
+         let calculate = document.querySelector("select");
+         let btn = document.querySelector(".item2 button");
+
+         calculate.addEventListener("change", () => {
+            tinhtoan(calculate.value);
+         });
+
+         // let btn = document.querySelectorAll(".btn");
+
+         // for (let i = 0; i < btn.length; i++) {
+         //    btn[i].addEventListener("click", () => {
+         //       tinhtoan(btn[i].value);
+         //    });
+         // }
+
+         function tinhtoan(calculate) {
+            let a = parseFloat(input[0].value);
+            let b = parseFloat(input[1].value);
+            let result;
+            switch (calculate) {
+               case "+": result = a + b; break;
+               case "-": result = a - b; break;
+               case "x": result = a * b; break;
+               case "/": result = a / b; break;
+            }
+            document.getElementById("output").value = result;
+         }
+      </script>
+   </body>
+</html>

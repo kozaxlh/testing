@@ -1,0 +1,36 @@
+div {
+   text-align: center;
+   padding: 4px;
+   border: 1px solid #000;
+   margin: 8px;
+}
+
+#content {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-evenly;
+}
+
+#root {
+   width: 800px;
+   margin: 8px auto;
+}
+
+#btn,#delete-button {
+   width: 40%;
+   line-height: 20px;
+}
+
+.number {
+   width: max-content;
+   font-size: 1.4rem;
+   margin: 8px auto;
+}
+
+.item {
+   padding: 8px;
+}
+
+h1 {
+   margin: 8px 
+}
