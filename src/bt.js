@@ -30,9 +30,13 @@ if (!localStorage.getItem('product'))
    }]
 
 function updateLocalStorage() {
-   let jsonData = JSON.stringify(users);
-   localStorage.setItem('myUsers', jsonData);
+   let usersData = JSON.stringify(users);
+   let productsData = JSON.stringify(products)
+   localStorage.setItem('myUsers', usersData);
+   localStorage.setItem('product', productsData)
 }
+
+updateLocalStorage()
 
 function openBlock(myBlock) {
    myBlock.classList.add("open");
@@ -53,39 +57,53 @@ open.addEventListener('click', () => openBlock(modal));
 function checkRegisterForm() {
    let error = '';
    //check is null
-   if (!email.value)
+   if (!email.value) {
       error += 'Vui lòng nhập email\n'
-
-   if (!password[0].value || !password[1].value)
+   }
+   if (!password[0].value || !password[1].value) {
       error += 'Vui lòng nhập mật khẩu\n'
+   }
 
-   if (!phone.value)
+   if (!phone.value) {
       error += 'Vui lòng nhập SĐT\n'
+   }
 
    if (error != '')
       return error;
 
    //check email
    let regexEmail = /^[\w\d-]+@(?:yahoo|gmail|outlook).com$/gm;
-   if (!regexEmail.test(email.value.trim().toLowerCase()))
-      error += 'Email không hợp lệ'
+   if (!regexEmail.test(email.value.trim().toLowerCase())) {
+      error += 'Email không hợp lệ\n'
+      email.value = ''
+   }
 
    //check duplicate user
    for (let user of users) {
       if (email.value === user.email) {
          error += 'Email này đã được sử dụng\n'
+         email.value = ''
       }
    }
    //check password
-   if (password[0].value.length < 6)
+
+   if (password[0].value.length < 6) {
       error += 'Nhập lại mật khẩu\n'
-   else if (password[0].value !== password[1].value)
+      for(let pass of password)
+         pass.value = ''
+   }
+   else if (password[0].value !== password[1].value) {
       error += 'Xác nhận mật khẩu trùng khớp\n'
+      for(let pass of password)
+         pass.value = ''
+   }
 
    //checkPhone
    let regexPhone = /0[0-9]{9}$/gm;
-   if (!regexPhone.test(phone.value))
+   if (!regexPhone.test(phone.value)) {
       error += 'Số điện thoại không hợp lệ'
+      phone.value = ''
+   }
 
    return error;
 }
@@ -100,27 +118,20 @@ function updateUsers() {
    updateLocalStorage();
 }
 
-function resetInput() {
-   for (let item of $$('input')) {
-      item.value = ''
+function runRegister() {
+   let error = checkRegisterForm();
+   if (error !== '')
+      alert(error);
+   else {
+      updateUsers();
+      window.location = "./bt.html"
    }
 }
 
 // add user from input
-if (form)
-   form.addEventListener('click', () => {
-      let error = checkRegisterForm();
-      if (error !== '') {
-         alert(error);
-         resetInput();
-      }
-      else {
-         alert("Đăng ký thành công")
-         updateUsers();
-         window.location = "./bt.html"
-      }
-   })
-
+if (form) {
+   form.addEventListener('click', runRegister);
+}
 //=======Login===========
 const loginUsername = $('.login-input[name="email"]');
 const loginPassword = $('.login-input[name="password"]');
@@ -150,7 +161,6 @@ function checkLoginForm() {
    for (let user of users) {
       if (inputEmail === user.email) {
          if (inputPassword === user.password) {
-            alert("Đăng nhập thành công");
             isFound = true;
             checkUserType(user);
             return;
@@ -168,14 +178,26 @@ function checkUserType(user) {
       window.location = "./bt.html"
 }
 
+function runLogin() {
+   let error = checkLoginForm();
+   if (error) {
+      alert(error);
+   }
+   loginUsername.value = ''
+   loginPassword.value = ''
+}
+
 if (loginSubmit)
-   loginSubmit.addEventListener('click', () => {
-      let error = checkLoginForm();
-      if (error) {
-         alert(error);
-         resetInput();
-      }
-   })
+   loginSubmit.addEventListener('click', runLogin)
+
+
+$("body").addEventListener('keydown',(e) => {
+   if (e.keyCode === 13)
+      if(window.location.pathname === '/public/bt3.html')
+         runRegister();
+      else if(window.localStorage.pathname === '/public/dangnhap.html')
+         runLogin();
+})
 
 //=================================================
 // let checkSport = $$('.sport-input')
