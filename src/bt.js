@@ -60,17 +60,6 @@ Validator({
          "Vui lòng nhập email"
       ),
       Validator.isEmail('input[name="email"]'),
-      Validator.haveDataInDB(
-         'input[name="email"]',
-         () => {
-            let comfirmValues = []
-            for (let user of users) {
-               comfirmValues.push(user.email);
-            }
-            return comfirmValues;
-         },
-         'Email này đã được sử dụng'
-      ),
       Validator.isRequired(
          'input[name="password"]',
          "Vui lòng nhập mật khẩu"
@@ -100,11 +89,28 @@ Validator({
       ),
    ],
    onSubmit: function (data) {
-      updateUsers(data)
-      window.location = "./index.html"
+      checkRegister(data);
    },
 });
 
+function checkRegister(data) {
+   let isFound = false;
+   for (let user of users) {
+      if (data.email === user.email) {
+         isFound = true;
+         break;
+      }
+   }
+   if (isFound) {
+      $('.warning').innerHTML = `<div class="block-warning">
+            <i class="fas fa-exclamation-circle"></i> Email này đã đươc đăng ký
+         </div>`
+   }
+   else {
+      updateUsers(data)
+      window.location = "./index.html"
+   }
+}
 
 function updateUsers(data) {
    users.push({
@@ -134,31 +140,30 @@ Validator({
       Validator.minLength('input[name="password"]', 6),
    ],
    onSubmit: function (data) {
-      hasUserInDB(data);
+      checkLogin(data);
    }
 });
 
-function hasUserInDB (data) {
+function checkLogin(data) {
    let isFound = false;
    for (let user of users) {
       if (data.email === user.email) {
-         if(data.password == user.password) {
+         if (data.password == user.password) {
             isFound = true;
             checkUserType(user)
             break;
          }
       }
    }
-   if(!isFound) {
-      let warning = $('.warning');
-      warning.innerHTML = `<div class="block-warning">
-         <i class="fas fa-exclamation-circle"></i> Tài khoản hoặc mật khẩu của bạn đã sai
-      </div>`
+   if (!isFound) {
+      $('.warning').innerHTML = `<div class="block-warning">
+            <i class="fas fa-exclamation-circle"></i> Tài khoản hoặc mật khẩu của bạn đã sai
+         </div>`
       resetInput()
    }
 }
 
-function resetInput () {
+function resetInput() {
    let inputs = $$('input')
    for (let input of inputs) {
       input.value = '';
@@ -173,20 +178,6 @@ function checkUserType(user) {
       $(".logo .nav-login").innerHTML = `<p>Xin chào ${user.email}</p>`
    }
 }
-
-// function runLogin() {
-//    let error = checkLoginForm();
-//    if (error) {
-//       alert(error);
-//    }
-//    loginUsername.value = ''
-//    loginPassword.value = ''
-// }
-
-// if (loginSubmit)
-//    loginSubmit.addEventListener('click', runLogin)
-
-
 
 //=================================================
 // let checkSport = $$('.sport-input')

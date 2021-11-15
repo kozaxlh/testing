@@ -195,21 +195,6 @@ Validator.isDuplicated = (myNode, getConfirmValue, message) => {
    };
 }
 
-Validator.haveDataInDB = (myNode, getConfirmValue, message) => {
-   return {
-      selector: myNode,
-      test: function (value) {
-         let comfirmValues = getConfirmValue();
-         for (let i = 0; i < comfirmValues.length; i++) {
-            if (value === comfirmValues[i]) {
-               return message || 'Dữ liệu này đã bị trùng';
-            }
-         }
-         return undefined;
-      }
-   };
-}
-
 Validator.isCorrectPhone = (myNode, message) => {
    return {
       selector: myNode,
