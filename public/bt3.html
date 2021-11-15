@@ -16,21 +16,23 @@
       <div class="btn"><a href="./dangnhap.html">Đăng nhập</a></div>
       <div class="modal open">
          <div class="modal-content">
-            <div>
-               <div class="header">
-                  <h3>Đăng ký</h3>
-                  <i class="fas fa-times"></i>
-               </div>
-               <div class="form-content">
+            <div class="header">
+               <h3>Đăng ký</h3>
+               <i class="fas fa-times"></i>
+            </div>
+            <form action="" method="POST" class="form-content">
+               <div class="form-group">
                   <label class="form-label">Email *</label>
                   <input
                      class="form-input"
                      type="email"
                      name="email"
                      placeholder="Example@email.com"
-                     value=""
-                     required
+                     value=""                
                   />
+                  <span class="messenger-error"></span>
+               </div>
+               <div class="form-group">
                   <label class="form-label">Mật khẩu *</label>
                   <input
                      class="form-input"
@@ -39,8 +41,11 @@
                      placeholder="Nhập mật khẩu từ 6 kí tự trở lên"
                      value=""
                      maxlength="10"
-                     required
                   />
+                  <span class="messenger-error"></span>
+               </div>
+
+               <div class="form-group">
                   <label class="form-label">Nhập lại mật khẩu *</label>
                   <input
                      class="form-input"
@@ -48,8 +53,11 @@
                      name="comfirmpwd"
                      placeholder="Nhập lại mật khẩu"
                      value=""
-                     required
                   />
+                  <span class="messenger-error"></span>
+               </div>
+
+               <div class="form-group">
                   <label class="form-label">SĐT</label>
                   <input
                      class="form-input"
@@ -59,10 +67,14 @@
                      maxlength="10"
                      value=""
                   />
-                  <button type="submit" class="btn-submit register-submit">Submit</button>
-                  <p>Bạn đã có tài khoản? <a href="./dangnhap.html">Đăng nhập</a></p>
+                  <span class="messenger-error"></span>
                </div>
-            </div>
+
+               <button type="submit" class="btn-submit register-submit">Submit</button>
+               <p>
+                  Bạn đã có tài khoản? <a href="./dangnhap.html">Đăng nhập</a>
+               </p>
+            </form>
          </div>
       </div>
       <!-- <div class="check">
@@ -111,6 +123,7 @@
             <input type="text" name="inputquiz" />
          </div>
       </div> -->
+      <script src="../src/validator.js"></script>
       <script src="../src/bt.js"></script>
    </body>
 </html>

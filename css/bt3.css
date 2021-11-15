@@ -40,23 +40,9 @@
 }
 
 .modal-content .header h3 {
-  position: absolute;
-  animation: animate 5s infinite;
+  text-align: center;
 }
 
-@keyframes animate {
-  0% {
-    left: 20px;    
-  }
-  50% {
-    left: 480px;
-    color: #ccc;
-  }
-  100% {
-    left: 20px;
-    color:#fff;
-  }
-}
 
 .modal-content .header i {
    position: absolute;
@@ -68,23 +54,37 @@
 .modal-content .header i:hover {
    background: red;
 }
-
+/* Validator */
 .modal-content .form-content,
 .modal-content .form-content .form-input,
-.modal-content .form-content .form-label,
 .modal-content .form-content .btn-submit {
-   margin-top: 4px;
+   margin: 4px 0;
    padding: 8px;
 }
 
-.modal-content .form-content {
+.modal-content .form-content,
+.form-content .form-group {
    display: flex;
    flex-direction: column;
    padding: 8px;
 }
 
 .modal-content .form-content .btn-submit {
-   margin: 8px 0;
+   margin: 8px;
+}
+
+.modal-content .form-content .messenger-error {
+   padding-left: 4px;
+   font-size: 14px;
+   color: #f10;
+}
+
+.messenger-error > i {
+   padding-right: 4px;
+}
+
+.invalid {
+   border: 1px solid #f10!important;
 }
 
 /* Chrome, Safari, Edge, Opera */

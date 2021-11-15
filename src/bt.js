@@ -53,85 +53,52 @@ close.addEventListener('click', () => closeBlock(modal));
 // Open modal
 open.addEventListener('click', () => openBlock(modal));
 
+//Register
+Validator({
+   form: ".form-content",
+   rules: [
+      Validator.isRequired(
+         'input[name="email"]',
+         "Vui lòng nhập email"
+      ),
+      Validator.isEmail('input[name="email"]'),
+      Validator.isRequired(
+         'input[name="password"]',
+         "Vui lòng nhập mật khẩu"
+      ),
+      Validator.minLength('input[name="password"]', 6),
+      Validator.isRequired('input[name="comfirmpwd"]'),
+      Validator.isDuplicated(
+         'input[name="comfirmpwd"]',
+         () => {
+            return document.querySelector('input[name="password"]')
+               .value;
+         },
+         "Mật khẩu không trùng khớp"
+      ),
+      Validator.isRequired(
+         'input[name="phone"]',
+         "Vui lòng nhập số điện thoại"
+      ),
+      Validator.isCorrectPhone('input[name="phone"]'),
+   ],
+   onSubmit: function (data) {
+      console.log(data)
+      updateUsers(data) 
+      window.location = "./index.html"
+   },
+});
 
-function checkRegisterForm() {
-   let error = '';
-   //check is null
-   if (!email.value) {
-      error += 'Vui lòng nhập email\n'
-   }
-   if (!password[0].value || !password[1].value) {
-      error += 'Vui lòng nhập mật khẩu\n'
-   }
-
-   if (!phone.value) {
-      error += 'Vui lòng nhập SĐT\n'
-   }
-
-   if (error != '')
-      return error;
-
-   //check email
-   let regexEmail = /^[\w\d-]+@(?:yahoo|gmail|outlook).com$/gm;
-   if (!regexEmail.test(email.value.trim().toLowerCase())) {
-      error += 'Email không hợp lệ\n'
-      email.value = ''
-   }
-
-   //check duplicate user
-   for (let user of users) {
-      if (email.value === user.email) {
-         error += 'Email này đã được sử dụng\n'
-         email.value = ''
-      }
-   }
-   //check password
-
-   if (password[0].value.length < 6) {
-      error += 'Nhập lại mật khẩu\n'
-      for (let pass of password)
-         pass.value = ''
-   }
-   else if (password[0].value !== password[1].value) {
-      error += 'Xác nhận mật khẩu trùng khớp\n'
-      for (let pass of password)
-         pass.value = ''
-   }
-
-   //checkPhone
-   let regexPhone = /0[0-9]{9}$/gm;
-   if (!regexPhone.test(phone.value)) {
-      error += 'Số điện thoại không hợp lệ'
-      phone.value = ''
-   }
-
-   return error;
-}
-
-function updateUsers() {
+function updateUsers(data) {
    users.push({
-      email: $('input[type="email"]').value.toLowerCase(),
-      password: password[0].value,
-      phone: $('input[name="phone"]').value,
+      email: data.email,
+      password: data.password,
+      phone: data.phone,
       typeUser: "member"
    });
    updateLocalStorage();
 }
 
-function runRegister() {
-   let error = checkRegisterForm();
-   if (error !== '')
-      alert(error);
-   else {
-      updateUsers();
-      window.location = "./index.html"
-   }
-}
-
-// add user from input
-if (form) {
-   form.addEventListener('click', runRegister);
-}
 //=======Login===========
 const loginUsername = $('.login-input[name="email"]');
 const loginPassword = $('.login-input[name="password"]');
@@ -195,9 +162,9 @@ if (loginSubmit)
 
 $("body").addEventListener('keydown', (e) => {
    if (e.keyCode === 13) {
-      if(window.location.pathname === '/public/dangnhap.html')
+      if (window.location.pathname === '/public/dangnhap.html')
          runLogin();
-      else if(window.location.pathname === '/public/bt3.html')
+      else if (window.location.pathname === '/public/bt3.html')
          runRegister();
    }
 })
