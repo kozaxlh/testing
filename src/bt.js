@@ -27,12 +27,12 @@ if (!localStorage.getItem('product'))
 
 function updateLocalStorage() {
    let usersData = JSON.stringify(users);
-   let productsData = JSON.stringify(products)
+   let productsData = JSON.stringify(products);
+   let loginUserData = JSON.stringify(loginData);
    localStorage.setItem('myUsers', usersData);
-   localStorage.setItem('product', productsData)
+   localStorage.setItem('product', productsData);
+   localStorage.setItem('loginUser', loginUserData)
 }
-
-updateLocalStorage()
 
 function openBlock(myBlock) {
    myBlock.classList.add("open");
@@ -44,10 +44,12 @@ function closeBlock(myBlock) {
 
 
 // Close modal
-close.addEventListener('click', () => closeBlock(modal));
+if (close)
+   close.addEventListener('click', () => closeBlock(modal));
 
 // Open modal
-open.addEventListener('click', () => openBlock(modal));
+if (open)
+   open.addEventListener('click', () => openBlock(modal));
 
 //Register
 Validator({
@@ -65,7 +67,10 @@ Validator({
          "Vui lòng nhập mật khẩu"
       ),
       Validator.minLength('input[name="password"]', 6),
-      Validator.isRequired('input[name="comfirmpwd"]'),
+      Validator.isRequired(
+         'input[name="comfirmpwd"]',
+         'Vui lòng nhập mật khẩu'
+      ),
       Validator.isDuplicated(
          'input[name="comfirmpwd"]',
          () => {
@@ -170,14 +175,28 @@ function resetInput() {
    }
 }
 
+let loginData = JSON.parse(localStorage.getItem('loginUser'));
+
 function checkUserType(user) {
    if (user.typeUser === 'admin')
       window.location = "./admin.html"
    else {
+      loginData = user;
+      updateLocalStorage()
       window.location = "./index.html"
-      $(".logo .nav-login").innerHTML = `<p>Xin chào ${user.email}</p>`
    }
 }
+
+$('body').addEventListener('keypress', (e) => {
+   if (window.location.pathname === '/public/dangnhap.html' || window.location.pathname === '/public/bt3.html')
+      if (e.keyCode === 13)
+         $('button[type="submit"]').click();
+})
+
+updateLocalStorage()
+
+
+
 
 //=================================================
 // let checkSport = $$('.sport-input')

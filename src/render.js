@@ -199,14 +199,23 @@ const coursesData = [
    },
 ]
 
-const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
-
-let blockCourse = $(".block-item.mid");
-let menuBtn = $$(".menu-items");
+let loginUser = JSON.parse(localStorage.getItem('loginUser'));
+let blockCourse = document.querySelector(".block-item.mid");
+let menuBtn = document.querySelectorAll(".menu-items");
 
 
-function render(course) {
+function render(course = []) {
+   let myLogo = document.querySelector('.logo .nav-login');
+   if (loginUser) {
+      myLogo.innerHTML = `<div class="user-login">
+         <p>Xin chào ${loginUser.email}</p>
+         <a href="#" id="logout" onclick="logout()">Đăng xuất</a>
+      </div>`
+   }
+   else {
+      myLogo.innerHTML = `<a href="./bt3.html">Đăng ký</a>
+      <a href="./dangnhap.html">Đăng nhập</a>`
+   }
 
    let html = course.map(item => {
       return `<div class="course-item">
@@ -220,15 +229,29 @@ function render(course) {
 }
 
 
+let coursesHtml;
+
 for (let btn of menuBtn) {
    btn.addEventListener('click', () => {
-      let coursesHtml = [];
-
-      for(let course of coursesData) {
+      coursesHtml = [];
+      for (let course of coursesData) {
          if (btn.getAttribute("language") === course.language)
-         coursesHtml.push(course);
+            coursesHtml.push(course);
       }
 
       render(coursesHtml);
    })
 }
+
+function updateLoginUser() {
+   let loginUserData = JSON.stringify(loginUser);
+   localStorage.setItem('loginUser', loginUserData);
+}
+
+function logout() {
+   loginUser = null;
+   updateLoginUser()
+   render(coursesHtml);
+}
+
+render(coursesHtml)
