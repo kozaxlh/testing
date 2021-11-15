@@ -1,14 +1,47 @@
+// Form HTML for validator
+/* <div class="form-group">
+         <label class="form-label">Email *</label>
+         <input
+            class="form-input"
+            type="email"
+            name="email"
+            placeholder="Example@email.com"
+            value=""                
+         />
+         <span class="message-error"></span>
+      </div> */
+
 function Validator(options) {
+   //if input isn't same level tag
+   function getParent(element, selector) {
+      while (element.parentElement) {
+         if (element.parentElement.matches(selector)) {
+            return element.parentElement;
+         }
+         element = element.parentElement;
+      }
+   }
 
    let selectorRules = {};
 
    function valiadate(inputElement, rule) {
-      let errorElement = inputElement.nextElementSibling;
+      let parentElement = getParent(inputElement, options.formGroupSelector);
+      let errorElement = parentElement.querySelector(options.errorSelector);
       let errorMessage;
       let rulesInput = selectorRules[rule.selector];
 
       for (let ruleInput of rulesInput) {
-         errorMessage = ruleInput(inputElement.value)
+         switch (inputElement.type) {
+            case 'checkbox': case 'radio':
+               errorMessage = ruleInput(
+                  formElement.querySelector(rule.selector + ':checked')
+               )
+               break;
+
+            default:
+               errorMessage = ruleInput(inputElement.value)
+         }
+
          if (errorMessage) break;
       }
 
@@ -37,20 +70,43 @@ function Validator(options) {
 
          options.rules.forEach(rule => {
             let inputElement = formElement.querySelector(rule.selector)
+
             let isValid = valiadate(inputElement, rule)
             if (!isValid) {
                isFormValid = false;
             }
-         })
+         });
 
          if (isFormValid) {
             //JS Submit
             if (typeof options.onSubmit === 'function') {
-               let enableInputs = formElement.querySelectorAll('[name]:not([disabled])')
-               let formValues = Array.from(enableInputs).reduce((values, input) => {
-                  values[input.name] = input.value;
-                  return values;
-               }, {});
+               let enableInputs = formElement.querySelectorAll('[name]')
+               let formValues = Array.from(enableInputs).reduce(
+                  (values, input) => {
+                     switch (input.type) {
+                        case 'radio':
+                           values[input.name] = formElement.querySelector(`input[name="${input.name}"]:checked`).value;
+                           break;
+                        case 'checkbox':
+                           if (!input.matches(':checked')) {
+                              values[input.name] = [];
+                              return values;
+                           }
+                           if (!Array.isArray(values[input.name])) {
+                              values[input.name] = [];
+                           }
+                           values[input.name].push(input.value)
+                           break;
+                        case 'file':
+                           values[input.name] = input.files;
+                        default:
+                           values[input.name] = input.value;
+                     }
+
+
+                     return values;
+                  }, {});
+
                options.onSubmit(formValues)
             }
             //Default Submit
@@ -70,30 +126,42 @@ function Validator(options) {
             selectorRules[rule.selector] = [rule.test];
          }
 
+         let inputElements = formElement.querySelectorAll(rule.selector)
 
-         let inputElement = formElement.querySelector(rule.selector)
-         if (inputElement) {
-            // Handle Blur
-            inputElement.onblur = () => {
-               valiadate(inputElement, rule);
-            };
+         for (let inputElement of inputElements) {
+            if (inputElement) {
+               // Handle Blur
+               inputElement.onblur = () => {
+                  valiadate(inputElement, rule);
+               };
 
-            //Handle Input
-            inputElement.oninput = () => {
-               let errorElement = inputElement.nextElementSibling;
-               errorElement.innerHTML = '';
-               inputElement.classList.remove("invalid");
-            };
+               //Handle Input
+               inputElement.oninput = () => {
+                  let parentElement = getParent(inputElement, options.formGroupSelector);
+                  let errorElement = parentElement.querySelector(options.errorSelector);
+
+                  errorElement.innerHTML = '';
+                  inputElement.classList.remove("invalid");
+               };
+
+               //Handle change
+               inputElement.onchange = () => {
+                  valiadate(inputElement, rule);
+               }
+            }
          }
       });
    }
 }
 
+
 Validator.isRequired = (myNode, message) => {
    return {
       selector: myNode,
       test: function (value) {
-         return value.trim() ? undefined : message || 'Vui lòng nhập trường này'
+         if (!value)
+            value = '';
+         return value ? undefined : message || 'Vui lòng nhập trường này'
       }
    };
 }
@@ -123,6 +191,21 @@ Validator.isDuplicated = (myNode, getConfirmValue, message) => {
       selector: myNode,
       test: function (value) {
          return value === getConfirmValue() ? undefined : message || 'Giá trị nhập vào không chính xác'
+      }
+   };
+}
+
+Validator.haveDataInDB = (myNode, getConfirmValue, message) => {
+   return {
+      selector: myNode,
+      test: function (value) {
+         let comfirmValues = getConfirmValue();
+         for (let i = 0; i < comfirmValues.length; i++) {
+            if (value === comfirmValues[i]) {
+               return message || 'Dữ liệu này đã bị trùng';
+            }
+         }
+         return undefined;
       }
    };
 }

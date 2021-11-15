@@ -7,10 +7,6 @@ const $$ = document.querySelectorAll.bind(document);
 const modal = $('.modal');
 const close = $('.header i');
 const open = $('.btn-open');
-const password = $$('input[type="password"]');
-const email = $('input[name="email"]');
-const phone = $('input[name="phone"]')
-const form = $('.btn-submit.register-submit');
 
 if (!localStorage.getItem('myUsers'))
    users = [{
@@ -56,12 +52,25 @@ open.addEventListener('click', () => openBlock(modal));
 //Register
 Validator({
    form: ".form-content",
+   formGroupSelector: ".form-group",
+   errorSelector: '.message-error',
    rules: [
       Validator.isRequired(
          'input[name="email"]',
          "Vui lòng nhập email"
       ),
       Validator.isEmail('input[name="email"]'),
+      Validator.haveDataInDB(
+         'input[name="email"]',
+         () => {
+            let comfirmValues = []
+            for (let user of users) {
+               comfirmValues.push(user.email);
+            }
+            return comfirmValues;
+         },
+         'Email này đã được sử dụng'
+      ),
       Validator.isRequired(
          'input[name="password"]',
          "Vui lòng nhập mật khẩu"
@@ -81,13 +90,21 @@ Validator({
          "Vui lòng nhập số điện thoại"
       ),
       Validator.isCorrectPhone('input[name="phone"]'),
+      Validator.isRequired(
+         'input[name="check"]',
+         'Vui lòng chọn vào mục này'
+      ),
+      Validator.isRequired(
+         'select[name="provice"]',
+         'Vui lòng chọn tỉnh Thành'
+      ),
    ],
    onSubmit: function (data) {
-      console.log(data)
-      updateUsers(data) 
+      updateUsers(data)
       window.location = "./index.html"
    },
 });
+
 
 function updateUsers(data) {
    users.push({
@@ -100,42 +117,52 @@ function updateUsers(data) {
 }
 
 //=======Login===========
-const loginUsername = $('.login-input[name="email"]');
-const loginPassword = $('.login-input[name="password"]');
-const loginSubmit = $('.btn-submit.login-submit');
+Validator({
+   form: '.login-content',
+   formGroupSelector: '.form-group',
+   errorSelector: '.message-error',
+   rules: [
+      Validator.isRequired(
+         'input[name="email"]',
+         "Vui lòng nhập email"
+      ),
+      Validator.isEmail('input[name="email"]'),
+      Validator.isRequired(
+         'input[name="password"]',
+         "Vui lòng nhập mật khẩu"
+      ),
+      Validator.minLength('input[name="password"]', 6),
+   ],
+   onSubmit: function (data) {
+      hasUserInDB(data);
+   }
+});
 
-function checkLoginForm() {
-   let inputEmail = loginUsername.value.trim().toLowerCase();
-   let inputPassword = loginPassword.value;
-
-   //check isNull input
-   if (!inputEmail && !inputPassword)
-      return 'Vui lòng nhập tên tài khoản và mật khẩu'
-   if (!inputEmail)
-      return 'Vui lòng nhập tên tài khoản'
-   if (!inputPassword)
-      return 'Vui lòng nhập mật khẩu'
-
-   //check email and password without request DB
-   let regex = /^[\w\d-]+@(?:yahoo|gmail|outlook).com$/gm;
-   if (!regex.test(inputEmail))
-      return 'Tên tài khoản không trùng khớp'
-
-   if (inputPassword.length < 6)
-      return 'Mật khẩu không nhỏ hơn 6 kí tự'
-
-   //find user in DB
+function hasUserInDB (data) {
+   let isFound = false;
    for (let user of users) {
-      if (inputEmail === user.email) {
-         if (inputPassword === user.password) {
+      if (data.email === user.email) {
+         if(data.password == user.password) {
             isFound = true;
-            checkUserType(user);
-            return;
+            checkUserType(user)
+            break;
          }
       }
    }
-   return 'Tên tài khoản hoặc mật khẩu sai'
+   if(!isFound) {
+      let warning = $('.warning');
+      warning.innerHTML = `<div class="block-warning">
+         <i class="fas fa-exclamation-circle"></i> Tài khoản hoặc mật khẩu của bạn đã sai
+      </div>`
+      resetInput()
+   }
+}
 
+function resetInput () {
+   let inputs = $$('input')
+   for (let input of inputs) {
+      input.value = '';
+   }
 }
 
 function checkUserType(user) {
@@ -147,27 +174,19 @@ function checkUserType(user) {
    }
 }
 
-function runLogin() {
-   let error = checkLoginForm();
-   if (error) {
-      alert(error);
-   }
-   loginUsername.value = ''
-   loginPassword.value = ''
-}
+// function runLogin() {
+//    let error = checkLoginForm();
+//    if (error) {
+//       alert(error);
+//    }
+//    loginUsername.value = ''
+//    loginPassword.value = ''
+// }
 
-if (loginSubmit)
-   loginSubmit.addEventListener('click', runLogin)
+// if (loginSubmit)
+//    loginSubmit.addEventListener('click', runLogin)
 
 
-$("body").addEventListener('keydown', (e) => {
-   if (e.keyCode === 13) {
-      if (window.location.pathname === '/public/dangnhap.html')
-         runLogin();
-      else if (window.location.pathname === '/public/bt3.html')
-         runRegister();
-   }
-})
 
 //=================================================
 // let checkSport = $$('.sport-input')
