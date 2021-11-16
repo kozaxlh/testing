@@ -1,5 +1,7 @@
 let users = JSON.parse(localStorage.getItem('myUsers'));
 let products = JSON.parse(localStorage.getItem('product'));
+let loginData = JSON.parse(localStorage.getItem('loginUser'));
+
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
@@ -29,6 +31,7 @@ function updateLocalStorage() {
    let usersData = JSON.stringify(users);
    let productsData = JSON.stringify(products);
    let loginUserData = JSON.stringify(loginData);
+   
    localStorage.setItem('myUsers', usersData);
    localStorage.setItem('product', productsData);
    localStorage.setItem('loginUser', loginUserData)
@@ -86,11 +89,7 @@ Validator({
       Validator.isCorrectPhone('input[name="phone"]'),
       Validator.isRequired(
          'input[name="check"]',
-         'Vui lòng chọn vào mục này'
-      ),
-      Validator.isRequired(
-         'select[name="provice"]',
-         'Vui lòng chọn tỉnh Thành'
+         'Bạn chưa đồng ý điều khoản sử dụng'
       ),
    ],
    onSubmit: function (data) {
@@ -124,6 +123,7 @@ function updateUsers(data) {
       phone: data.phone,
       typeUser: "member"
    });
+   loginData = users[users.length - 1];
    updateLocalStorage();
 }
 
@@ -175,7 +175,6 @@ function resetInput() {
    }
 }
 
-let loginData = JSON.parse(localStorage.getItem('loginUser'));
 
 function checkUserType(user) {
    if (user.typeUser === 'admin')
@@ -188,7 +187,7 @@ function checkUserType(user) {
 }
 
 $('body').addEventListener('keypress', (e) => {
-   if (window.location.pathname === '/public/dangnhap.html' || window.location.pathname === '/public/bt3.html')
+   if (window.location.pathname === '/public/login.html' || window.location.pathname === '/public/register.html')
       if (e.keyCode === 13)
          $('button[type="submit"]').click();
 })

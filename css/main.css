@@ -2,6 +2,10 @@
    box-sizing: border-box;
 }
 
+p {
+   margin: 0;
+}
+
 #root {
    width: 1200px;
    max-width: 100%;
@@ -23,15 +27,24 @@
    color: #fff;
 }
 
+.logo .nav-login {
+   padding: 12px;
+}
+
 .menu {
    border: 1px solid #000;
    display: flex;
    flex-wrap: wrap;
 }
 
+.left ul li {
+   text-align: center;
+}
+
 .menu a:hover,
 .left ul li:hover {
    background: #ccc;
+   cursor: pointer;
 }
 
 .menu-items {
@@ -40,8 +53,8 @@
 }
 
 .left .menu-items {
-   padding: 16px!important;
-   border: 0!important;
+   padding: 16px;
+   border: 0;
 }
 
 .content {
@@ -59,9 +72,9 @@
 }
 
 .left ul li {
-   list-style-type: none;
    border: 1px solid #000;
    padding: 14px 4px;
+   list-style-type: none;
 }
 
 .content .mid {

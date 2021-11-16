@@ -74,9 +74,9 @@
 
 .modal-content .form-content,
 .form-content .form-group {
+   padding: 8px;
    display: flex;
    flex-direction: column;
-   padding: 8px;
 }
 
 .modal-content .form-content .btn-submit {

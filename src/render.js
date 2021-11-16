@@ -202,9 +202,20 @@ const coursesData = [
 let loginUser = JSON.parse(localStorage.getItem('loginUser'));
 let blockCourse = document.querySelector(".block-item.mid");
 let menuBtn = document.querySelectorAll(".menu-items");
+let coursesHtml;
 
+for (let btn of menuBtn) {
+   btn.addEventListener('click', () => {
+      coursesHtml = [];
+      for (let course of coursesData) {
+         if (btn.getAttribute("language") === course.language)
+            coursesHtml.push(course);
+      }
+      render();
+   })
+}
 
-function render(course = []) {
+function render() {
    let myLogo = document.querySelector('.logo .nav-login');
    if (loginUser) {
       myLogo.innerHTML = `<div class="user-login">
@@ -213,11 +224,11 @@ function render(course = []) {
       </div>`
    }
    else {
-      myLogo.innerHTML = `<a href="./bt3.html">Đăng ký</a>
-      <a href="./dangnhap.html">Đăng nhập</a>`
+      myLogo.innerHTML = `<a href="./register.html">Đăng ký</a>
+      <a href="./login.html">Đăng nhập</a>`
    }
 
-   let html = course.map(item => {
+   let html = coursesHtml.map(item => {
       return `<div class="course-item">
              <h3>${item.title}</h3>
              <img src="${item.thumbnail_cdn}" alt="${item.title}">
@@ -228,21 +239,6 @@ function render(course = []) {
    blockCourse.innerHTML = html;
 }
 
-
-let coursesHtml;
-
-for (let btn of menuBtn) {
-   btn.addEventListener('click', () => {
-      coursesHtml = [];
-      for (let course of coursesData) {
-         if (btn.getAttribute("language") === course.language)
-            coursesHtml.push(course);
-      }
-
-      render(coursesHtml);
-   })
-}
-
 function updateLoginUser() {
    let loginUserData = JSON.stringify(loginUser);
    localStorage.setItem('loginUser', loginUserData);
@@ -251,7 +247,7 @@ function updateLoginUser() {
 function logout() {
    loginUser = null;
    updateLoginUser()
-   render(coursesHtml);
+   render();
 }
 
-render(coursesHtml)
+render()
